@@ -4,8 +4,8 @@ b1 = torch.randn((3, 4), requires_grad=True, device="cuda:0")
 c1 = torch.matmul(a1, b1)
 d1 = c1 * 5
 d1.sum().backward()
-a2 = torch.tensor(a1, requires_grad=True, device="cuda:0")
-b2 = torch.tensor(b1, requires_grad=True, device="cuda:0")
+a2 = a1.clone().detach().requires_grad_(True)
+b2 = b1.clone().detach().requires_grad_(True)
 c2 = op.matmul_op(a2, b2)
 d2 = c2 * 5
 d2.sum().backward()
