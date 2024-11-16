@@ -1,12 +1,21 @@
-__global__ void matmul_kernel(float *c, float *a, float *b, int n)
+#define DIVUP(m, n) ((m + n - 1) / n)
+
+__global__ void matmul_kernel(float* c, const float* a, const float* b, unsigned m, unsigned n, unsigned k)
 {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < n) {
-        c[idx] = a[idx] + b[idx];
+    unsigned ix = blockIdx.x * blockDim.x + threadIdx.x;
+    unsigned iy = blockIdx.y * blockDim.y + threadIdx.y;
+    if (ix < m && iy < n) {
+        float sum = 0;
+        for (size_t t = 0; t < k; ++t) {
+            sum += a[ix * k + t] * b[t * n + iy];
+        }
+        c[ix * n + iy] = sum;
     }
 }
 
-void matmul_launcher(float *c, float *a, float *b, int n)
+void matmul_launcher(float* c, const float* a, const float* b, unsigned m, unsigned n, unsigned k)
 {
-    matmul_kernel<<<(n+127)/128, 128>>>(c, a, b, n);
+    dim3 block_size(32, 32);
+    dim3 grid_size(DIVUP(m, block_size.x), DIVUP(n, block_size.y));
+    matmul_kernel<<<grid_size, block_size>>>(c, a, b, m, n, k);
 }
