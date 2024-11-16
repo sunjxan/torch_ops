@@ -9,7 +9,7 @@ class MatmulOp(torch.autograd.Function):
     @staticmethod
     def forward(ctx, a, b):
         # 计算前向传播结果
-        c = torch_ops_matmul.forward(a, b)
+        c = torch_ops_matmul.forward(a.contiguous(), b.contiguous())
         # 保存张量以供反向传播使用
         ctx.save_for_backward(a, b, c)
         return c
@@ -20,8 +20,11 @@ class MatmulOp(torch.autograd.Function):
         a, b, c = ctx.saved_tensors
         # 根据外层梯度grad_output和forward过程计算各个输入的梯度，device需要和输入相同
         # 如果某个输入不需要梯度，返回None
-        grad_a = torch_ops_matmul.backward_left(a, b)
-        grad_b = torch_ops_matmul.backward_right(a, b)
+        g = grad_output.contiguous()
+        a_T = a.T.contiguous()
+        b_T = b.T.contiguous()
+        grad_a = torch_ops_matmul.forward(g, b_T)
+        grad_b = torch_ops_matmul.forward(a_T, g)
         return grad_a, grad_b
 
 matmul_op = MatmulOp.apply
