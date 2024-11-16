@@ -8,7 +8,7 @@ ext_modules = [
             "src/matmul.cpp"
         ],
         include_dirs=[
-            'include'
+            '/root/torch_ops_matmul/include'
         ]
     ) 
 ]
