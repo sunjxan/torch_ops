@@ -1,1 +1,1 @@
-void matmul_launcher(float *c, float *a, float *b, int n);
+void matmul_launcher(float* c, const float* a, const float* b, unsigned m, unsigned n, unsigned k);
