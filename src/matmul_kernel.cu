@@ -6,7 +6,7 @@ __global__ void matmul_kernel(float* c, const float* a, const float* b, unsigned
     unsigned iy = blockIdx.y * blockDim.y + threadIdx.y;
     if (ix < m && iy < n) {
         float sum = 0;
-        for (size_t t = 0; t < k; ++t) {
+        for (unsigned t = 0; t < k; ++t) {
             sum += a[ix * k + t] * b[t * n + iy];
         }
         c[ix * n + iy] = sum;
