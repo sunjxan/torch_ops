@@ -8,7 +8,7 @@ from . import torch_ops_matmul
 class MatmulOp(torch.autograd.Function):
     @staticmethod
     def forward(ctx, a, b):
-        # 计算前向传播结果
+        # 计算前向传播结果，要求确保输入tensor元素地址连续
         c = torch_ops_matmul.forward(a.contiguous(), b.contiguous())
         # 保存张量以供反向传播使用
         ctx.save_for_backward(a, b, c)
