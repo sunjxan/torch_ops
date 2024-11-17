@@ -3,7 +3,7 @@ from . import torch_ops_matmul
 # torch.ops.load_library('op/torch_ops_matmul.so')
 # torch_ops_matmul = torch.ops.torch_ops_matmul
 # from torch.utils.cpp_extension import load
-# torch_ops_matmul = load("torch_ops_matmul", sources=["src/matmul_kernel.cu", "src/matmul.cpp"], extra_include_paths=["include"], verbose=True)
+# torch_ops_matmul = load("torch_ops_matmul", sources=["src/matmul.cu"], verbose=True)
 
 class MatmulOp(torch.autograd.Function):
     @staticmethod
