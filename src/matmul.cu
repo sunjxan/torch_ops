@@ -42,8 +42,8 @@ at::Tensor matmul(const at::Tensor a, const at::Tensor b)
     at::Tensor c = at::zeros({m, n}, at::dtype(a.scalar_type()).device(torch::kCUDA));
 
     AT_DISPATCH_FLOATING_TYPES_AND_HALF(a.scalar_type(), "matmul operation", ([&] {
-        scalar_t *p_a = a.data_ptr<scalar_t>();
-        scalar_t *p_b = b.data_ptr<scalar_t>();
+        const scalar_t *p_a = a.data_ptr<scalar_t>();
+        const scalar_t *p_b = b.data_ptr<scalar_t>();
         scalar_t *p_c = c.data_ptr<scalar_t>();
         matmul_launcher(p_c, p_a, p_b, m, n, k);
     }));
