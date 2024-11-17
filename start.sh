@@ -1,6 +1,6 @@
 rm -rf build
-rm op/*.so
 cmake -S . -B build
 cmake --build build
+rm op/*.so
 mv build/*.so op
 python3 test.py
