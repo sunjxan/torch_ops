@@ -3,11 +3,9 @@ from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 ext_modules = [
     CUDAExtension(
         "torch_ops_matmul", [
-            "src/matmul_kernel.cu",
-            "src/matmul.cpp"
+            "src/matmul.cu"
         ],
         include_dirs=[
-            "include"
         ]
     ) 
 ]
