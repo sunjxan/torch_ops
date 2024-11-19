@@ -1,5 +1,3 @@
 rm -rf build
-python3 setup.py build
-rm *.so
-mv build/lib.*/*.so .
+pip3 install -e .
 python3 tests/test.py
