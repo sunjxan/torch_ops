@@ -1,9 +1,9 @@
 import torch
-from . import torch_ops_matmul
-# torch.ops.load_library('op/torch_ops_matmul.so')
+import torch_ops_matmul
+# torch.ops.load_library('torch_ops_matmul.so')
 # torch_ops_matmul = torch.ops.torch_ops_matmul
 # from torch.utils.cpp_extension import load
-# torch_ops_matmul = load("torch_ops_matmul", sources=["src/matmul.cu"], verbose=True)
+# torch_ops_matmul = load("torch_ops_matmul", sources=["src/cuda/matmul.cu"], verbose=True)
 
 class MatmulOp(torch.autograd.Function):
     @staticmethod
