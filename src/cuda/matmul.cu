@@ -22,7 +22,7 @@
 #define DIVUP(m, n) ((m + n - 1) / n)
 
 template<typename T>
-__global__ void matmul_kernel(T *c, const T *a, const T *b, unsigned m, unsigned n, unsigned k)
+__global__ void forward_kernel(T *c, const T *a, const T *b, unsigned m, unsigned n, unsigned k)
 {
     unsigned ix = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned iy = blockIdx.y * blockDim.y + threadIdx.y;
@@ -36,11 +36,11 @@ __global__ void matmul_kernel(T *c, const T *a, const T *b, unsigned m, unsigned
 }
 
 template<typename T>
-void matmul_impl(T *c, const T *a, const T *b, unsigned m, unsigned n, unsigned k)
+void forward_impl(T *c, const T *a, const T *b, unsigned m, unsigned n, unsigned k)
 {
     dim3 block_size(32, 32);
     dim3 grid_size(DIVUP(m, block_size.x), DIVUP(n, block_size.y));
-    matmul_kernel<<<grid_size, block_size>>>(c, a, b, m, n, k);
+    forward_kernel<<<grid_size, block_size>>>(c, a, b, m, n, k);
 
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
@@ -48,7 +48,7 @@ void matmul_impl(T *c, const T *a, const T *b, unsigned m, unsigned n, unsigned 
     }
 }
 
-at::Tensor matmul(const at::Tensor &a, const at::Tensor &b)
+at::Tensor forward(const at::Tensor &a, const at::Tensor &b)
 {
     CHECK_INPUT(a);
     CHECK_INPUT(b);
@@ -58,22 +58,22 @@ at::Tensor matmul(const at::Tensor &a, const at::Tensor &b)
     at::ScalarType mat_dtype = a.scalar_type();
     at::Tensor c = at::zeros({m, n}, at::dtype(mat_dtype).device(at::kCUDA));
 
-    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, mat_dtype, "matmul operation", ([&] {
+    AT_DISPATCH_FLOATING_TYPES_AND2(at::ScalarType::Half, at::ScalarType::BFloat16, mat_dtype, "matmul operation forward", ([&] {
         const scalar_t *p_a = a.data_ptr<scalar_t>();
         const scalar_t *p_b = b.data_ptr<scalar_t>();
         scalar_t *p_c = c.data_ptr<scalar_t>();
-        matmul_impl(p_c, p_a, p_b, m, n, k);
+        forward_impl(p_c, p_a, p_b, m, n, k);
     }));
 
     return c;
 }
 
-PYBIND11_MODULE(torch_ops_matmul, m)
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
 {
-    m.def("forward", matmul);
+    m.def("forward", forward);
 }
 
-TORCH_LIBRARY(torch_ops_matmul, m)
+TORCH_LIBRARY(TORCH_EXTENSION_NAME, m)
 {
-    m.def("forward", matmul);
+    m.def("forward", forward);
 }
