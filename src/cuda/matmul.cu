@@ -68,12 +68,12 @@ at::Tensor forward(const at::Tensor &a, const at::Tensor &b)
     return c;
 }
 
-PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
+PYBIND11_MODULE(torch_ops_matmul, m)
 {
     m.def("forward", forward);
 }
 
-TORCH_LIBRARY(TORCH_EXTENSION_NAME, m)
+TORCH_LIBRARY(torch_ops_matmul, m)
 {
     m.def("forward", forward);
 }
