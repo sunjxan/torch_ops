@@ -6,7 +6,7 @@ d1 = c1 * 5
 d1.sum().backward()
 a2 = a1.clone().detach().requires_grad_(True)
 b2 = b1.clone().detach().requires_grad_(True)
-c2 = torch_ops.matmul_op(a2, b2)
+c2 = torch_ops.matmul(a2, b2)
 d2 = c2 * 5
 d2.sum().backward()
 print(torch.allclose(c1, c2, atol=5e-3))
