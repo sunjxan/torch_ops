@@ -1,3 +1,3 @@
-from .matmul import matmul_op
+from .matmul_op import matmul
 
-__all__ = ['matmul_op']
+__all__ = ['matmul']
