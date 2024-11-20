@@ -27,4 +27,4 @@ class MatmulOp(torch.autograd.Function):
         grad_b = torch_ops_matmul.forward(a_T, g)
         return grad_a, grad_b
 
-matmul_op = MatmulOp.apply
+matmul = MatmulOp.apply
