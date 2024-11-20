@@ -68,6 +68,7 @@ at::Tensor forward(const at::Tensor &a, const at::Tensor &b)
     return c;
 }
 
+// 宏TORCH_EXTENSION_NAME被定义为torch_ops_matmul，可以在PYBIND11_MODULE使用
 PYBIND11_MODULE(torch_ops_matmul, m)
 {
     m.def("forward", forward, "matmul module forward");
