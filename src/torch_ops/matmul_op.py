@@ -12,6 +12,8 @@ class MatmulOp(torch.autograd.Function):
         c = torch_ops_matmul.forward(a.contiguous(), b.contiguous())
         # 保存张量以供反向传播使用
         ctx.save_for_backward(a, b, c)
+        # 如果算子不需要考虑反向传播，可以将函数的输出标记不需要微分
+        # ctx.mark_non_differentiable(c)
         return c
 
     @staticmethod
