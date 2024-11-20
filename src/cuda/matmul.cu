@@ -70,7 +70,7 @@ at::Tensor forward(const at::Tensor &a, const at::Tensor &b)
 
 PYBIND11_MODULE(torch_ops_matmul, m)
 {
-    m.def("forward", forward);
+    m.def("forward", forward, "matmul module forward");
 }
 
 TORCH_LIBRARY(torch_ops_matmul, m)
