@@ -27,7 +27,7 @@ __global__ void forward_kernel(T *c, const T *a, const T *b, unsigned m, unsigne
     unsigned iy = blockIdx.y * blockDim.y + threadIdx.y;
     unsigned ix = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if (ix < m && iy < n) {
+    if (iy < m && ix < n) {
         T sum = 0.0f;
         for (size_t t = 0; t < k; ++t) {
             sum += a[iy * k + t] * b[t * n + ix];
