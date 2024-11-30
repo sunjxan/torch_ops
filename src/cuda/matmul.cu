@@ -24,14 +24,15 @@
 template<typename T>
 __global__ void forward_kernel(T *c, const T *a, const T *b, unsigned m, unsigned n, unsigned k)
 {
-    unsigned ix = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned iy = blockIdx.y * blockDim.y + threadIdx.y;
-    if (ix < m && iy < n) {
+    unsigned ix = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (iy < M && ix < N) {
         T sum = 0.0f;
-        for (unsigned t = 0; t < k; ++t) {
-            sum += a[ix * k + t] * b[t * n + iy];
+        for (size_t t = 0; t < K; ++t) {
+            sum += A[iy][t] * B[t][ix];
         }
-        c[ix * n + iy] = sum;
+        C[iy][ix] = sum;
     }
 }
 
